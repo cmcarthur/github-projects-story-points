@@ -6,9 +6,11 @@ A Chrome Extension to add [SCRUM](https://en.wikipedia.org/wiki/Scrum_(software_
 
 ![Example screenshot](./screenshot.png)
 
-You notes/PR/issues should have a title like `(2) My issue title` and the "(2)"
+You notes/PR/issues should have a title like `My issue title (2)` and the "(2)"
 will be converted in a nice tag. Also all projects lists will have the total count
 of story points in them next to the count of cards.
+
+It's also possible to define spent points using `My issue title (2/1)`.
 
 ## To Install
 
@@ -23,4 +25,4 @@ of story points in them next to the count of cards.
 
 1. Reload the extension page or click the "Reload" link under **GitHub Projects Story Points**
 1. Open your Projects or Issues pages in your Repo on GitHub.com
-1. You should now see any items with (#) preceeding the title added up as (# points)
+1. You should now see any items with (#) following the title added up as (# points)

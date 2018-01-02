@@ -1,7 +1,7 @@
 (function (d, w) {
 'use strict';
 
-var pointsRegEx = /^(\(([\d\.]+)\)\s*)?(.+?)(\s*\[([\d\.]+)\])?$/im; // new RegExp("^(\(([\d\.]+)\))?(.+)(\[([\d\.]+)\])?$", "i"); // Was: /^\(([\d\.]+)\)(.+)/i; 
+var pointsRegEx = /^(.+?)(\(([\d\.]+)[\/]?([\d\.]+)?\)\s*)?$/im;
 
 var debounce = function (func, wait, immediate) {
   var timeout;
@@ -68,9 +68,9 @@ var addStoryPointsForColumn = (column) => {
         pointsRegEx.exec(titleElement.innerText) ||
         [null, '0', titleElement.innerText]
       );
-      const storyPoints = parseFloat(story[2]) || 0;
-      const storyTitle = story[3];
-      const spentPoints = parseFloat(story[5]) || 0;
+      const storyPoints = parseFloat(story[3]) || 0;
+      const storyTitle = story[1];
+      const spentPoints = parseFloat(story[4]) || 0;
       return {
         element: card,
         titleElement,
