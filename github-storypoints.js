@@ -36,13 +36,11 @@ var resetStoryPointsForColumn = (column) => {
 };
 
 var titleWithPoints = (title, points, spent) => (
-  `<span style="font-weight:bold">${title}</span><br \>
-  <span class="github-project-story-points counter"
-  style="font-size:xx-small">${spent} spent of ${points}</span>`
+    `<span class="github-project-story-points Counter">${points}/${spent}</span> ${title}`
 );
 
 var titleWithTotalPoints = (title, points, spent) => (
-    `${title}<span class="github-project-story-points" style="font-size:xx-small"> item${pluralize(title)} (${spent} spent of ${points})</span>`
+    `${title}<span class="github-project-story-points" style="font-size:xx-small"> item${pluralize(title)} (${points}/${spent})</span>`
 );
 
 var addStoryPointsForColumn = (column) => {
