@@ -1,5 +1,7 @@
 # GitHub Projects Story Points
 
+Forked from https://github.com/brthrs/github-project-story-points.
+
 A Chrome Extension to add [story points](https://en.wikipedia.org/wiki/Planning_poker) totals to [GitHub Projects](https://help.github.com/articles/about-projects/) columns.
 
 ![Example screenshot](./screenshot.png)
