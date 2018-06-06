@@ -1,16 +1,12 @@
 # GitHub Projects Story Points
 
-A Chrome Extension to add [SCRUM](https://en.wikipedia.org/wiki/Scrum_(software_development))
-[story points](https://en.wikipedia.org/wiki/Planning_poker) pretty display to
-[GitHub Projects](https://help.github.com/articles/about-projects/).
+A Chrome Extension to add [story points](https://en.wikipedia.org/wiki/Planning_poker) totals to [GitHub Projects](https://help.github.com/articles/about-projects/) columns.
 
 ![Example screenshot](./screenshot.png)
 
-You notes/PR/issues should have a title like `My issue title (2)` and the "(2)"
-will be converted in a nice tag. Also all projects lists will have the total count
-of story points in them next to the count of cards.
+You can estimate issues by adding a tag like `estimate: 2`. The number will be converted into a tag at the top of the project column.
 
-It's also possible to define spent points using `My issue title (2/1)`.
+This extension will also show the number of unestimated issues in a project.
 
 ## To Install
 
@@ -24,5 +20,5 @@ It's also possible to define spent points using `My issue title (2/1)`.
 **GitHub Projects Story Points** should now appear in your Extensions lists
 
 1. Reload the extension page or click the "Reload" link under **GitHub Projects Story Points**
-1. Open your Projects or Issues pages in your Repo on GitHub.com
-1. You should now see any items with (#) following the title added up as (# points)
+1. Open your Projects page on github.com
+1. Enjoy!

@@ -1,7 +1,7 @@
 (function (d, w) {
 'use strict';
 
-var pointsRegEx = /^(.+?)(\(([\d\.]+)[\/]?([\d\.]+)?\)\s*)?$/im;
+var estimateRegEx = /^estimate: ([\d\.]+)$/im;
 
 var debounce = function (func, wait, immediate) {
   var timeout;
@@ -35,64 +35,65 @@ var resetStoryPointsForColumn = (column) => {
   }
 };
 
-var titleWithPoints = (title, points, spent) => (
-    `<span class="github-project-story-points Counter">${points}/${spent}</span> ${title}`
-);
+var titleWithTotalPoints = (title, points, unestimated) => {
+    let unestimated_element = "";
+    let points_element = "";
 
-var titleWithTotalPoints = (title, points, spent) => (
-    `${title}<span class="github-project-story-points" style="font-size:xx-small"> item${pluralize(title)} (${points}/${spent})</span>`
-);
+    if (unestimated > 0) {
+      unestimated_element = `${unestimated} missing estimate`;
+    }
+
+    if (points > 0) {
+      points_element = `${points} points`;
+    }
+
+    if (points_element && unestimated_element) {
+      unestimated_element = `, ${unestimated_element}`;
+    }
+
+    return `${title} card${pluralize(title)} <span class="github-project-story-points" style="font-size:xx-small">(${points_element}${unestimated_element})</span>`;
+};
 
 var addStoryPointsForColumn = (column) => {
   const columnCards = Array
     .from(column.getElementsByClassName('issue-card'))
     .filter(card => !card.classList.contains('sortable-ghost'))
     .map(card => {
-      const titleElementContainer = Array
-        .from(card.getElementsByClassName('h5'))
-        .concat(Array.from(card.getElementsByTagName('p')))[0];
-      const titleElementLink = (
-        titleElementContainer.getElementsByTagName &&
-        titleElementContainer.getElementsByTagName('a') ||
-        []
-      );
-      const titleElement = (
-        titleElementLink.length > 0
-        ? titleElementLink[0]
-        : titleElementContainer
-      );
-      const title = titleElementContainer.innerText;
-      const story = (
-        pointsRegEx.exec(titleElement.innerText) ||
-        [null, '0', titleElement.innerText]
-      );
-      const storyPoints = parseFloat(story[3]) || 0;
-      const storyTitle = story[1];
-      const spentPoints = parseFloat(story[4]) || 0;
+      const labels = Array
+        .from(card.getElementsByClassName('labels'))
+
+      const estimateLabels = Array
+        .from(card.getElementsByClassName('issue-card-label'))
+        .filter(label => label.innerText.includes('estimate'))
+
+      const firstEstimateText = (
+        estimateLabels.length > 0 ? estimateLabels[0].innerText.trim() : null)
+
+      const match = (
+        estimateRegEx.exec(firstEstimateText) ||
+        [null, '0'])
+
+      const storyPoints = parseFloat(match[1]) || 0;
+      const estimated = (match[0] !== null);
+
       return {
         element: card,
-        titleElement,
-        title,
-        titleNoPoints: storyTitle,
-        storyPoints,
-        spentPoints,
+        estimated,
+        storyPoints
       };
     });
   const columnCountElement = column.getElementsByClassName('js-column-card-count')[0];
 
   let columnStoryPoints = 0;
-  let columnSpentPoints = 0;
+  let columnUnestimated = 0;
+
   for (let card of columnCards) {
     columnStoryPoints += card.storyPoints;
-    columnSpentPoints += card.spentPoints;
-    if (card.storyPoints || card.spentPoints) {
-      card.titleElement.dataset.gpspOriginalContent = card.title;
-      card.titleElement.innerHTML = titleWithPoints(card.titleNoPoints, card.storyPoints, card.spentPoints);
-    }
+    columnUnestimated += (card.estimated ? 0 : 1);
   }
   // Apply DOM changes:
-  if (columnStoryPoints || columnSpentPoints) {
-    columnCountElement.innerHTML = titleWithTotalPoints(columnCards.length, columnStoryPoints, columnSpentPoints);
+  if (columnStoryPoints || columnUnestimated) {
+    columnCountElement.innerHTML = titleWithTotalPoints(columnCards.length, columnStoryPoints, columnUnestimated);
   }
 };
 
@@ -122,21 +123,6 @@ var start = debounce(() => {
         column.removeEventListener('DOMSubtreeModified', addStoryPoints);
         column.removeEventListener('drop', addStoryPoints);
       })(column));
-    }
-  }
-  // Issues
-  const issues = Array.from(d.getElementsByClassName('js-issue-row'));
-  for (let issue of issues) {
-    const titleElement = issue.getElementsByClassName('h4')[0];
-    const story = (
-      pointsRegEx.exec(titleElement.innerText) ||
-      [null, '0', titleElement.innerText]
-    );
-    const storyPoints = parseFloat(story[2]) || 0;
-    const storyTitle = story[3];
-    const spentPoints = parseFloat(story[5]) || 0;
-    if (storyPoints || spentPoints) {
-      titleElement.innerHTML = titleWithPoints(storyTitle, storyPoints, spentPoints);
     }
   }
 }, 50);
